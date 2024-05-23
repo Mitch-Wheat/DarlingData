@@ -1,31 +1,46 @@
-CREATE OR ALTER FUNCTION dbo.Payment_Inline
+SET ANSI_NULLS ON;
+SET ANSI_PADDING ON;
+SET ANSI_WARNINGS ON;
+SET ARITHABORT ON;
+SET CONCAT_NULL_YIELDS_NULL ON;
+SET QUOTED_IDENTIFIER ON;
+SET NUMERIC_ROUNDABORT OFF;
+SET IMPLICIT_TRANSACTIONS OFF;
+SET STATISTICS TIME, IO OFF;
+GO
+
+CREATE OR ALTER FUNCTION
+    dbo.Payment_Inline
 (
     @Rate float,
-    @Periods int,
+    @Periods integer,
     @Present float,
     @Future float,
-    @Type int
+    @Type integer
 )
-RETURNS table
+RETURNS TABLE
 AS
 RETURN
-    
-    WITH pre AS 
+/*
+For support, head over to GitHub:
+https://github.com/erikdarlingdata/DarlingData
+*/
+    WITH pre AS
     (
        SELECT
-           Type 
-               = ISNULL(@Type, 0),
-           Future 
-               = ISNULL(@Future, 0),
-           Term 
-               = POWER(1 + @Rate, @Periods)
+           Type = 
+               ISNULL(@Type, 0),
+           Future = 
+               ISNULL(@Future, 0),
+           Term = 
+               POWER(1 + @Rate, @Periods)
     ),
-         post AS 
+         post AS
     (
         SELECT
-            Payment = 
-                CASE 
-                    WHEN @Rate = 0 
+            Payment =
+                CASE
+                    WHEN @Rate = 0
                     THEN (@Present + p.Future) / @Periods
                     WHEN (@Rate <> 0
                            AND p.Type = 0)
@@ -37,7 +52,7 @@ RETURN
         FROM pre AS p
     )
     SELECT
-        Payment = 
+        Payment =
             CONVERT
             (
                 float,

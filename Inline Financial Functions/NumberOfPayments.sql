@@ -1,4 +1,16 @@
-CREATE OR ALTER FUNCTION NumberOfPayments_Inline
+SET ANSI_NULLS ON;
+SET ANSI_PADDING ON;
+SET ANSI_WARNINGS ON;
+SET ARITHABORT ON;
+SET CONCAT_NULL_YIELDS_NULL ON;
+SET QUOTED_IDENTIFIER ON;
+SET NUMERIC_ROUNDABORT OFF;
+SET IMPLICIT_TRANSACTIONS OFF;
+SET STATISTICS TIME, IO OFF;
+GO
+
+CREATE OR ALTER FUNCTION
+    dbo.NumberOfPayments_Inline
 (
     @Rate float,
     @Years float,
@@ -6,19 +18,22 @@ CREATE OR ALTER FUNCTION NumberOfPayments_Inline
     @FutureValue float,
     @Payments float,
     @PaymentsPerYear float,
-    @Type int
+    @Type integer
 )
-RETURNS table
+RETURNS TABLE
 AS
 RETURN
-    
+/*
+For support, head over to GitHub:
+https://github.com/erikdarlingdata/DarlingData
+*/
     SELECT
         NumPayments =
             CONVERT
             (
-                float,              
-                CASE 
-                     WHEN (@Type = 0 
+                float,
+                CASE
+                     WHEN (@Type = 0
                              OR @Type IS NULL)
                      THEN LOG(POWER(1 + @Rate / @PaymentsPerYear, @PaymentsPerYear))
                               / LOG((@Payments * (POWER(1 + @Rate / @PaymentsPerYear, @Years * @PaymentsPerYear) - 1))
