@@ -1,4 +1,4 @@
-﻿SET ANSI_NULLS ON;
+SET ANSI_NULLS ON;
 SET ANSI_PADDING ON;
 SET ANSI_WARNINGS ON;
 SET ARITHABORT ON;
@@ -10,54 +10,54 @@ SET STATISTICS TIME, IO OFF;
 GO
 
 /*
-██╗      ██████╗  ██████╗                        
-██║     ██╔═══██╗██╔════╝                        
-██║     ██║   ██║██║  ███╗                       
-██║     ██║   ██║██║   ██║                       
-███████╗╚██████╔╝╚██████╔╝                       
-╚══════╝ ╚═════╝  ╚═════╝                        
-                                                 
+██╗      ██████╗  ██████╗
+██║     ██╔═══██╗██╔════╝
+██║     ██║   ██║██║  ███╗
+██║     ██║   ██║██║   ██║
+███████╗╚██████╔╝╚██████╔╝
+╚══════╝ ╚═════╝  ╚═════╝
+
 ██╗  ██╗██╗   ██╗███╗   ██╗████████╗███████╗██████╗
 ██║  ██║██║   ██║████╗  ██║╚══██╔══╝██╔════╝██╔══██╗
 ███████║██║   ██║██╔██╗ ██║   ██║   █████╗  ██████╔╝
 ██╔══██║██║   ██║██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗
 ██║  ██║╚██████╔╝██║ ╚████║   ██║   ███████╗██║  ██║
 ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-  
-Copyright 2024 Darling Data, LLC
+
+Copyright 2025 Darling Data, LLC
 https://www.erikdarling.com/
 
 For usage and licensing details, run:
-EXEC sp_LogHunter
+EXECUTE sp_LogHunter
     @help = 1;
 
 For working through errors:
-EXEC sp_LogHunter
+EXECUTE sp_LogHunter
     @debug = 1;
 
 For support, head over to GitHub:
-https://github.com/erikdarlingdata/DarlingData
+https://code.erikdarling.com
 
-EXEC sp_LogHunter;
+EXECUTE sp_LogHunter;
 
 */
 
-IF OBJECT_ID('dbo.sp_LogHunter') IS NULL  
-   BEGIN  
-       EXEC ('CREATE PROCEDURE dbo.sp_LogHunter AS RETURN 138;');  
-   END;  
+IF OBJECT_ID(N'dbo.sp_LogHunter', N'P') IS NULL
+   BEGIN
+       EXECUTE (N'CREATE PROCEDURE dbo.sp_LogHunter AS RETURN 138;');
+   END;
 GO
 
 ALTER PROCEDURE
     dbo.sp_LogHunter
 (
-    @days_back int = -7, /*How many days back you want to look in the error logs*/
+    @days_back integer = -7, /*How many days back you want to look in the error logs*/
     @start_date datetime = NULL, /*If you want to search a specific time frame*/
     @end_date datetime = NULL, /*If you want to search a specific time frame*/
     @custom_message nvarchar(4000) = NULL, /*If there's something you specifically want to search for*/
     @custom_message_only bit = 0, /*If you only want to search for this specific thing*/
     @first_log_only bit = 0, /*If you only want to search the first log file*/
-    @language_id int = 1033, /*If you want to use a language other than English*/
+    @language_id integer = 1033, /*If you want to use a language other than English*/
     @help bit = 0, /*Get help*/
     @debug bit = 0, /*Prints messages and selects from temp tables*/
     @version varchar(30) = NULL OUTPUT,
@@ -65,15 +65,15 @@ ALTER PROCEDURE
 )
 WITH RECOMPILE
 AS
-SET STATISTICS XML OFF;  
+SET STATISTICS XML OFF;
 SET NOCOUNT ON;
-SET XACT_ABORT ON;  
+SET XACT_ABORT ON;
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 
 BEGIN
     SELECT
-        @version = '1.5',
-        @version_date = '20240401';
+        @version = '2.6',
+        @version_date = '20250601';
 
     IF @help = 1
     BEGIN
@@ -81,9 +81,9 @@ BEGIN
             introduction =
                 'hi, i''m sp_LogHunter!' UNION ALL
         SELECT  'you can use me to look through your error logs for bad stuff' UNION ALL
-        SELECT  'all scripts and documentation are available here: https://github.com/erikdarlingdata/DarlingData/tree/main/sp_LogHunter' UNION ALL
+        SELECT  'all scripts and documentation are available here: https://code.erikdarling.com' UNION ALL
         SELECT  'from your loving sql server consultant, erik darling: https://erikdarling.com';
-  
+
         SELECT
             parameter_name =
                 ap.name,
@@ -138,53 +138,47 @@ BEGIN
           AND ap.user_type_id = t.user_type_id
         WHERE o.name = N'sp_LogHunter'
         OPTION(RECOMPILE);
-  
+
         SELECT
             mit_license_yo = 'i am MIT licensed, so like, do whatever'
-    
+
         UNION ALL
-    
+
         SELECT
             mit_license_yo = 'see printed messages for full license';
-    
+
         RAISERROR('
     MIT License
-  
-    Copyright 2024 Darling Data, LLC
-  
+
+    Copyright 2025 Darling Data, LLC
+
     https://www.erikdarling.com/
-  
+
     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
     to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,
     sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
     following conditions:
-  
+
     The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-  
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
     FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     ', 0, 1) WITH NOWAIT;
-  
+
         RETURN;
     END;
-   
-    /*Check if we have sa permissisions*/
+
+    /*Check if we have sa permissisions, but not care in RDS*/
     IF
     (
         SELECT
             sa = ISNULL(IS_SRVROLEMEMBER(N'sysadmin'), 0)
     ) = 0
+    AND OBJECT_ID(N'rdsadmin.dbo.rds_read_error_log', N'P') IS NULL
     BEGIN
        RAISERROR(N'Current user is not a member of sysadmin, so we can''t read the error log', 11, 1) WITH NOWAIT;
-       RETURN;
-    END;
-
-    /*Check if we're using RDS*/
-    IF OBJECT_ID(N'rdsadmin.dbo.rds_read_error_log') IS NOT NULL
-    BEGIN
-       RAISERROR(N'This will not run on Amazon RDS with rdsadmin.dbo.rds_read_error_log because it doesn''t support search strings', 11, 1) WITH NOWAIT;
        RETURN;
     END;
 
@@ -212,10 +206,10 @@ BEGIN
         WHERE m.language_id = @language_id
     )
     BEGIN
-       RAISERROR(N'%i is not not a valid language_id in sys.messages.', 11, 1, @language_id) WITH NOWAIT;
+       RAISERROR(N'%i is not a valid language_id in sys.messages.', 11, 1, @language_id) WITH NOWAIT;
        RETURN;
     END;
-  
+
     /*Fix days back a little bit*/
     IF @days_back = 0
     BEGIN
@@ -228,7 +222,7 @@ BEGIN
         SELECT
             @days_back *= -1;
     END;
-  
+
     IF  @start_date IS NOT NULL
     AND @end_date   IS NOT NULL
     AND @days_back  IS NOT NULL
@@ -272,12 +266,18 @@ BEGIN
     /*variables for the variable gods*/
     DECLARE
         @c nvarchar(4000) /*holds the command to execute*/,
-        @l_log int = 0 /*low log file id*/,
-        @h_log int = 0 /*high log file id*/,
-        @t_searches int = 0 /*total number of searches to run*/,
-        @l_count int = 1 /*loop count*/,
-        @stopper bit = 0 /*stop loop execution safety*/;
-  
+        @l_log integer = 0 /*low log file id*/,
+        @h_log integer = 0 /*high log file id*/,
+        @t_searches integer = 0 /*total number of searches to run*/,
+        @l_count integer = 1 /*loop count*/,
+        @stopper bit = 0, /*stop loop execution safety*/
+        @is_rds bit =
+            CASE
+                WHEN OBJECT_ID(N'rdsadmin.dbo.rds_read_error_log', N'P') IS NOT NULL
+                THEN 1
+                ELSE 0
+            END;
+
     /*temp tables for holding temporary things*/
     CREATE TABLE
         #error_log
@@ -286,12 +286,12 @@ BEGIN
         process_info nvarchar(100),
         text nvarchar(4000)
     );
- 
+
     CREATE TABLE
         #enum
     (
-        archive int
-            PRIMARY KEY,
+        archive integer
+          PRIMARY KEY CLUSTERED,
         log_date date,
         log_size bigint
     );
@@ -300,8 +300,8 @@ BEGIN
         #search
     (
         id integer
-            IDENTITY
-            PRIMARY KEY,
+           IDENTITY
+           PRIMARY KEY CLUSTERED,
         search_string nvarchar(4000) DEFAULT N'""',
         days_back nvarchar(30) NULL,
         start_date nvarchar(30) NULL,
@@ -314,7 +314,7 @@ BEGIN
             CONVERT
             (
                 nvarchar(4000),
-                N'EXEC master.dbo.xp_readerrorlog [@@@], 1, '
+                N'EXECUTE master.dbo.xp_readerrorlog [@@@], 1, '
                 + search_string
                 + N', '
                 + N'" "'
@@ -331,7 +331,9 @@ BEGIN
     CREATE TABLE
         #errors
     (
-        id int PRIMARY KEY IDENTITY,
+        id integer
+           PRIMARY KEY CLUSTERED
+           IDENTITY,
         command nvarchar(4000) NOT NULL
     );
 
@@ -343,7 +345,7 @@ BEGIN
         log_date,
         log_size
     )
-    EXEC sys.sp_enumerrorlogs;
+    EXECUTE sys.sp_enumerrorlogs;
 
     IF @debug = 1 BEGIN SELECT table_name = '#enum before delete', e.* FROM #enum AS e; END;
 
@@ -357,7 +359,7 @@ BEGIN
         AND   e.archive > 0
         OPTION(RECOMPILE);
     END;
-  
+
     /*filter out log files we won't use, if @start_date and @end_date are set*/
     IF  @start_date IS NOT NULL
     AND @end_date IS NOT NULL
@@ -466,7 +468,7 @@ BEGIN
                 N'"' + CONVERT(nvarchar(30), @end_date) + N'"'
     ) AS c
     WHERE @custom_message_only = 0
-    OPTION(RECOMPILE); 
+    OPTION(RECOMPILE);
 
     /*deal with a custom search string here*/
     INSERT
@@ -499,7 +501,7 @@ BEGIN
     BEGIN
         SELECT table_name = '#search', s.* FROM #search AS s;
     END;
-  
+
     /*Set the min and max logs we're getting for the loop*/
     SELECT
         @l_log = MIN(e.archive),
@@ -516,12 +518,15 @@ BEGIN
     END;
 
     IF @debug = 1 BEGIN RAISERROR('Declaring cursor', 0, 1) WITH NOWAIT; END;
- 
+
     /*start the loops*/
     WHILE @l_log <= @h_log
     BEGIN
         DECLARE
-            c
+            @cs CURSOR;
+
+        SET
+            @cs =
         CURSOR
             LOCAL
             SCROLL
@@ -531,19 +536,34 @@ BEGIN
         SELECT
             command
         FROM #search;
-      
+
         IF @debug = 1 BEGIN RAISERROR('Opening cursor', 0, 1) WITH NOWAIT; END;
-       
-        OPEN c;
-      
+
+        OPEN @cs;
+
         FETCH FIRST
-        FROM c
+        FROM @cs
         INTO @c;
 
         IF @debug = 1 BEGIN RAISERROR('Entering WHILE loop', 0, 1) WITH NOWAIT; END;
-        WHILE @@FETCH_STATUS = 0 AND @stopper = 0         
+        WHILE @@FETCH_STATUS = 0
+        AND   @stopper = 0
         BEGIN
             IF @debug = 1 BEGIN RAISERROR('Entering cursor', 0, 1) WITH NOWAIT; END;
+
+            /*If using RDS, need to call a different procedure*/
+            IF @is_rds = 1
+            BEGIN
+                SELECT
+                    @c =
+                        REPLACE
+                        (
+                            @c,
+                            N'master.dbo.xp_readerrorlog',
+                            N'rdsadmin.dbo.rds_read_error_log'
+                        );
+            END;
+
             /*Replace the canary value with the log number we're working in*/
             SELECT
                 @c =
@@ -558,9 +578,9 @@ BEGIN
             BEGIN
                 RAISERROR('log %i of %i', 0, 1, @l_log, @h_log) WITH NOWAIT;
                 RAISERROR('search %i of %i', 0, 1, @l_count, @t_searches) WITH NOWAIT;
-                RAISERROR('@c: %s', 0, 1, @c) WITH NOWAIT;       
+                RAISERROR('@c: %s', 0, 1, @c) WITH NOWAIT;
             END;
-         
+
             IF @debug = 1 BEGIN RAISERROR('Inserting to error log', 0, 1) WITH NOWAIT; END;
             BEGIN
                 BEGIN TRY
@@ -572,7 +592,7 @@ BEGIN
                         process_info,
                         text
                     )
-                    EXEC sys.sp_executesql
+                    EXECUTE sys.sp_executesql
                         @c;
                 END TRY
                 BEGIN CATCH
@@ -585,14 +605,15 @@ BEGIN
                     VALUES
                     (
                         @c
-                    );         
+                    );
                 END CATCH;
             END;
-         
+
             IF @debug = 1 BEGIN RAISERROR('Fetching next', 0, 1) WITH NOWAIT; END;
+
             /*Get the next search command*/
             FETCH NEXT
-            FROM c
+            FROM @cs
             INTO @c;
 
             /*Increment our loop counter*/
@@ -600,8 +621,9 @@ BEGIN
                 @l_count += 1;
 
         END;
-         
+
         IF @debug = 1 BEGIN RAISERROR('Getting next log', 0, 1) WITH NOWAIT; END;
+
         /*Increment the log numbers*/
         SELECT
             @l_log = MIN(e.archive),
@@ -612,25 +634,23 @@ BEGIN
 
         IF @debug = 1
         BEGIN
-            RAISERROR('log %i of %i', 0, 1, @l_log, @h_log) WITH NOWAIT;   
+            RAISERROR('log %i of %i', 0, 1, @l_log, @h_log) WITH NOWAIT;
         END;
 
         /*Stop the loop if this is NULL*/
         IF @l_log IS NULL
         BEGIN
-            IF @debug = 1 BEGIN RAISERROR('Breaking', 0, 1) WITH NOWAIT; END;        
+            IF @debug = 1 BEGIN RAISERROR('Breaking', 0, 1) WITH NOWAIT; END;
             SET @stopper = 1;
             BREAK;
-        END;             
+        END;
         IF @debug = 1 BEGIN RAISERROR('Ended WHILE loop', 0, 1) WITH NOWAIT; END;
- 
-        /*Close out the cursor*/
-        CLOSE c;
-        DEALLOCATE c;
     END;
     IF @debug = 1 BEGIN RAISERROR('Ended cursor', 0, 1) WITH NOWAIT; END;
 
     /*get rid of some messages we don't care about*/
+    IF @debug = 1 BEGIN RAISERROR('Delete dumb messages', 0, 1) WITH NOWAIT; END;
+
     DELETE
         el WITH(TABLOCKX)
     FROM #error_log AS el
@@ -655,12 +675,38 @@ BEGIN
     OR    el.text LIKE N'The client was unable to reuse a session with%'
     OR    el.text LIKE N'SSPI%'
     OR    el.text LIKE N'%Severity: 1[0-8]%'
+    OR    el.text LIKE N'Login succeeded for user%'
     OR    el.text IN
           (
               N'The Database Mirroring endpoint is in disabled or stopped state.',
               N'The Service Broker endpoint is in disabled or stopped state.'
           )
     OPTION(RECOMPILE);
+
+    /*get rid of duplicate messages we don't care about*/
+    IF @debug = 1 BEGIN RAISERROR('Delete dupe messages', 0, 1) WITH NOWAIT; END;
+
+    WITH
+        d AS
+    (
+        SELECT
+            el.*,
+            n =
+                ROW_NUMBER() OVER
+                (
+                    PARTITION BY
+                        el.log_date,
+                        el.process_info,
+                        el.text
+                    ORDER BY
+                        el.log_date
+                )
+        FROM #error_log AS el
+    )
+    DELETE
+        d
+    FROM d AS d WITH (TABLOCK)
+    WHERE d.n > 1;
 
     /*Return the search results*/
     SELECT
@@ -679,7 +725,7 @@ BEGIN
             1/0
         FROM #errors AS e
     )
-    BEGIN     
+    BEGIN
         SELECT
             table_name =
                 '#errors',

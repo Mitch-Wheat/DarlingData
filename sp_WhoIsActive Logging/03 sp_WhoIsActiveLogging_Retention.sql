@@ -11,7 +11,7 @@ GO
 
 /*
 
-Copyright 2024 Darling Data, LLC
+Copyright 2025 Darling Data, LLC
 https://www.erikdarling.com/
 
 This will set delete tables older than a defined retention period, with  default of 10 days.
@@ -27,11 +27,11 @@ SQL Agent has some weird settings.
 This sets them to the correct ones.
 */
 
-IF OBJECT_ID('dbo.sp_WhoIsActiveLogging_Retention') IS NULL   
-   BEGIN   
-       EXEC ('CREATE PROCEDURE dbo.sp_WhoIsActiveLogging_Retention AS RETURN 138;');   
-   END;   
-GO 
+IF OBJECT_ID('dbo.sp_WhoIsActiveLogging_Retention') IS NULL
+   BEGIN
+       EXECUTE ('CREATE PROCEDURE dbo.sp_WhoIsActiveLogging_Retention AS RETURN 138;');
+   END;
+GO
 
 ALTER PROCEDURE
     dbo.sp_WhoIsActiveLogging_Retention
@@ -70,7 +70,7 @@ BEGIN
             FROM sys.tables AS t
             WHERE t.name LIKE N'WhoIsActive[_][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]%'
             AND   t.create_date < DATEADD(DAY, (@RetentionPeriod * -1), SYSDATETIME())
-            ORDER BY 
+            ORDER BY
                 t.create_date DESC
             FOR XML
                 PATH(N''),
@@ -81,8 +81,8 @@ BEGIN
                  'nvarchar(max)'
              );
 
-        EXEC sys.sp_executesql
+        EXECUTE sys.sp_executesql
             @dsql;
     END;
 END;
-GO 
+GO

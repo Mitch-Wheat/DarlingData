@@ -11,7 +11,7 @@ GO
 
 /*
 
-Copyright 2024 Darling Data, LLC
+Copyright 2025 Darling Data, LLC
 https://www.erikdarling.com/
 
 This will set up two views:
@@ -29,11 +29,11 @@ SQL Agent has some weird settings.
 This sets them to the correct ones.
 */
 
-IF OBJECT_ID('dbo.sp_WhoIsActiveLogging_CreateViews') IS NULL   
-   BEGIN   
-       EXEC ('CREATE PROCEDURE dbo.sp_WhoIsActiveLogging_CreateViews AS RETURN 138;');   
-   END;   
-GO 
+IF OBJECT_ID('dbo.sp_WhoIsActiveLogging_CreateViews') IS NULL
+   BEGIN
+       EXECUTE ('CREATE PROCEDURE dbo.sp_WhoIsActiveLogging_CreateViews AS RETURN 138;');
+   END;
+GO
 
 ALTER PROCEDURE
     dbo.sp_WhoIsActiveLogging_CreateViews
@@ -65,7 +65,7 @@ BEGIN
                 NCHAR(10)
         FROM sys.tables AS t
         WHERE t.name LIKE N'WhoIsActive[_][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]%'
-        ORDER BY 
+        ORDER BY
             t.create_date DESC
         FOR XML
             PATH(N''),
@@ -85,7 +85,7 @@ BEGIN
                 LEN(@vsql) - 11
             ) + N';';
 
-    EXEC sys.sp_executesql
+    EXECUTE sys.sp_executesql
         @vsql;
 
     IF NOT EXISTS
@@ -243,8 +243,8 @@ BEGIN
             b.collection_time,
             b.blocked_session_count DESC;';
 
-        EXEC sys.sp_executesql
+        EXECUTE sys.sp_executesql
             @sql;
     END;
 END;
-GO 
+GO

@@ -13,11 +13,11 @@ GO
 
 This procedure exists only to show how long IN clauses can hurt query performance.
 
-Copyright 2024 Darling Data, LLC
+Copyright 2025 Darling Data, LLC
 https://www.erikdarling.com/
 
 For support, head over to GitHub:
-https://github.com/erikdarlingdata/DarlingData
+https://code.erikdarling.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -37,10 +37,10 @@ CREATE OR ALTER PROCEDURE
 )
 AS
 BEGIN
-    SET NOCOUNT ON 
+    SET NOCOUNT ON
     SET XACT_ABORT OFF;
     SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-    
+
     DECLARE
         @psql nvarchar(MAX) =
             N'DECLARE @p',

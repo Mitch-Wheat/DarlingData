@@ -12,10 +12,10 @@ WITH SCHEMABINDING
 AS
 /*
 For support:
-https://github.com/erikdarlingdata/DarlingData
+https://code.erikdarling.com
 
-Copyright 2023 Darling Data, LLC
-https://erikdarlingdata.com
+Copyright 2025 Darling Data, LLC
+https://erikdarling.com
 
 MIT LICENSE
 
@@ -82,10 +82,10 @@ WITH SCHEMABINDING
 AS
 /*
 For support:
-https://github.com/erikdarlingdata/DarlingData
+https://code.erikdarling.com
 
-Copyright 2023 Darling Data, LLC
-https://erikdarlingdata.com
+Copyright 2025 Darling Data, LLC
+https://erikdarling.com
 
 MIT LICENSE
 

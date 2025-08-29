@@ -23,16 +23,16 @@ AS
 RETURN
 /*
 For support, head over to GitHub:
-https://github.com/erikdarlingdata/DarlingData
+https://code.erikdarling.com
 */
     WITH pre AS
     (
        SELECT
-           Type = 
+           Type =
                ISNULL(@Type, 0),
-           Future = 
+           Future =
                ISNULL(@Future, 0),
-           Term = 
+           Term =
                POWER(1 + @Rate, @Periods)
     ),
          post AS
